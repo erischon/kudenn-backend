@@ -1,6 +1,7 @@
 const express = require("express");
-
 const router = express.Router();
+
+const Ticket = require("../models/ticketModel");
 
 /**
  * GET all tickets
@@ -16,9 +17,16 @@ router.get("/:id", (req, res) => {
   res.json({ msg: "GET a single ticket" });
 });
 
-// POST a new ticket
-router.post("/", (req, res) => {
-  res.json({ msg: "POST a new ticket" });
+// POST a new workout
+router.post("/", async (req, res) => {
+  const { title, problem, expected } = req.body;
+
+  try {
+    const ticket = await Ticket.create({ title, problem, expected });
+    res.status(200).json(ticket);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 // DELETE a ticket
